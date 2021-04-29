@@ -1,5 +1,8 @@
 package fr.esgi.pa.editing_together_api.service;
 
+import fr.esgi.pa.editing_together_api.compilation.DockerCompilation;
+import fr.esgi.pa.editing_together_api.compilation.DockerErrorBuffer;
+import fr.esgi.pa.editing_together_api.compilation.DockerInputBuffer;
 import fr.esgi.pa.editing_together_api.controller.CompilerController;
 import fr.esgi.pa.editing_together_api.utils.FilesUtils;
 import lombok.AllArgsConstructor;
@@ -20,42 +23,47 @@ public class CompilerService {
 
     private final FilesUtils filesUtils;
 
-    public String compileForC() throws IOException, InterruptedException {
+    public String compileForC(DockerCompilation dockerCompilation) throws IOException, InterruptedException {
+
         String sourceCode = "#include <stdio.h>\n" +
                 "int main() {\n" +
                 "   // printf() displays the string inside quotation\n" +
-                "   printf(\"Hello, World!\")\n" +
+                "   printf(\"Hello, World!\");\n" +
                 "   return 0;\n" +
                 "}";
+        String output;
+
         filesUtils.saveUploadedFiles(sourceCode,  "utility_c/main.c");
 
         Logger logger = LogManager.getLogger(CompilerController.class);
 
         String imageName = "compile_in_c_" + new Date().getTime();
-        String[] dockerCommand = new String[] {"docker", "image", "build", "utility_c", "-t", imageName};
-        ProcessBuilder processbuilder = new ProcessBuilder(dockerCommand);
-        Process process = processbuilder.start();
+        String[] dockerBuildImageCommand = new String[] {"docker", "image", "build", "utility_c", "-t", imageName};
+        dockerCompilation.setCommand(dockerBuildImageCommand);
 
-        int status = process.waitFor();
+        int status = dockerCompilation.runCommand();
         if(status == 0)
             logger.info("Docker image has been built");
         else
             logger.info("Error while building image");
+
         logger.info("Running the container");
-        String[] dockerCommand2 = new String[] {"docker", "run", "--rm", imageName};
-        ProcessBuilder processbuilder2 = new ProcessBuilder(dockerCommand2);
-        Process process2 = processbuilder2.start();
-        status = process2.waitFor();
-        InputStream errorStream = process2.getErrorStream();
-        BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
-        logger.warn(errorReader.lines().collect(Collectors.joining()));
+        String[] dockerRunContainerCommand = new String[] {"docker", "run", "--rm", imageName};
+        dockerCompilation.setCommand(dockerRunContainerCommand);
+
+        status = dockerCompilation.runCommand();
 
         logger.info("End of the execution of the container");
         logger.info("status is : " + status);
-
-        process2.getInputStream();
         logger.info("Result of compilation");
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process2.getInputStream()));
-        return bufferedReader.lines().collect(Collectors.joining());
+        if(status == 0) {
+            output = dockerCompilation.output(new DockerInputBuffer());
+            logger.info(output);
+        }else {
+            output = dockerCompilation.output(new DockerErrorBuffer());
+            logger.warn(output);
+        }
+
+        return output;
     }
 }
