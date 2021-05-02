@@ -23,14 +23,8 @@ public class CompilerService {
 
     private final FilesUtils filesUtils;
 
-    public String compileForC(DockerCompilation dockerCompilation) throws IOException, InterruptedException {
+    public String compileForC(DockerCompilation dockerCompilation, String sourceCode) throws IOException, InterruptedException {
 
-        String sourceCode = "#include <stdio.h>\n" +
-                "int main() {\n" +
-                "   // printf() displays the string inside quotation\n" +
-                "   printf(\"Hello, World!\");\n" +
-                "   return 0;\n" +
-                "}";
         String output;
 
         filesUtils.saveUploadedFiles(sourceCode,  "utility_c/main.c");
@@ -44,8 +38,11 @@ public class CompilerService {
         int status = dockerCompilation.runCommand();
         if(status == 0)
             logger.info("Docker image has been built");
-        else
+        else {
             logger.info("Error while building image");
+            logger.info(dockerCompilation.output(new DockerErrorBuffer()));
+            return dockerCompilation.output(new DockerErrorBuffer());
+        }
 
         logger.info("Running the container");
         String[] dockerRunContainerCommand = new String[] {"docker", "run", "--rm", imageName};
