@@ -3,27 +3,28 @@ package fr.esgi.pa.editing_together_api.controller;
 import fr.esgi.pa.editing_together_api.compilation.DockerCompilation;
 import fr.esgi.pa.editing_together_api.service.CompilerService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/compiler")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CompilerController {
 
     private final CompilerService compilerService;
 
     @PostMapping("c")
-    public String compileForC() {
+    public ResponseEntity<String> compileForC(@RequestBody String code) {
         DockerCompilation dockerCompilation = new DockerCompilation();
+        String response = "";
         try {
-            return compilerService.compileForC(dockerCompilation);
+            response = compilerService.compileForC(dockerCompilation, code);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        return "null";
+        return ResponseEntity.ok(response);
     }
 }
