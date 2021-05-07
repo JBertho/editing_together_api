@@ -1,7 +1,7 @@
-package fr.esgi.pa.editing_together_api.app.controller;
+package fr.esgi.pa.editing_together_api.app.compiler.infrastructure.controller;
 
-import fr.esgi.pa.editing_together_api.app.compilation.DockerCompilation;
-import fr.esgi.pa.editing_together_api.app.service.CompilerService;
+import fr.esgi.pa.editing_together_api.app.compiler.usecase.DockerCompilation;
+import fr.esgi.pa.editing_together_api.app.compiler.usecase.CompilerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
