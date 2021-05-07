@@ -1,4 +1,4 @@
-package fr.esgi.pa.editing_together_api.utils;
+package fr.esgi.pa.editing_together_api.app.utils;
 
 import org.springframework.stereotype.Component;
 

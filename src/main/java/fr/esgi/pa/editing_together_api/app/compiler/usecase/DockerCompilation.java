@@ -1,4 +1,6 @@
-package fr.esgi.pa.editing_together_api.compilation;
+package fr.esgi.pa.editing_together_api.app.compiler.usecase;
+
+import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.DockerResponseStrategy.DockerBuffer;
 
 import java.io.IOException;
 
