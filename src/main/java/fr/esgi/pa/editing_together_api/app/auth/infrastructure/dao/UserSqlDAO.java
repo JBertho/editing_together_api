@@ -2,12 +2,13 @@ package fr.esgi.pa.editing_together_api.app.auth.infrastructure.dao;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.dao.UserDAO;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.Role;
-import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.User;
+import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.UserEntity;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class UserSqlDAO implements UserDAO {
 
     @Override
     public void createUser(String username, String email, String password, HashSet<Role> roles) {
-        userRepository.save(new User(username, email, password).setRoles(roles));
+        userRepository.save(new UserEntity(username, email, password).setRoles(roles));
     }
 
     @Override
@@ -28,5 +29,10 @@ public class UserSqlDAO implements UserDAO {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<UserEntity> findByUsername(String userName) {
+        return userRepository.findByUsername(userName);
     }
 }

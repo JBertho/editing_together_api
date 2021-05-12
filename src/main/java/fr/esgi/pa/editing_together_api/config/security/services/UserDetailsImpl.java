@@ -1,7 +1,7 @@
 package fr.esgi.pa.editing_together_api.config.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.User;
+import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,16 +34,16 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+    public static UserDetailsImpl build(UserEntity userEntity) {
+        List<GrantedAuthority> authorities = userEntity.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
+                userEntity.getId(),
+                userEntity.getUsername(),
+                userEntity.getEmail(),
+                userEntity.getPassword(),
                 authorities);
     }
 

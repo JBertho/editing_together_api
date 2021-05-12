@@ -1,6 +1,6 @@
 package fr.esgi.pa.editing_together_api.config.security.services;
 
-import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.User;
+import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.UserEntity;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +17,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(userEntity);
     }
 }

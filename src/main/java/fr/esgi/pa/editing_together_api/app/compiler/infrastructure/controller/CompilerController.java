@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-@AllArgsConstructor
+
 @RestController
 @RequestMapping("/compiler")
 @CrossOrigin(origins = "http://localhost:3000")
+@AllArgsConstructor
 public class CompilerController {
 
     private final CompilerService compilerService;
