@@ -9,4 +9,8 @@ import org.springframework.stereotype.Service;
 public class JoinProject {
     private final ProjectDAO projectDAO;
 
+    public int execute(int projectId, Long id) {
+        projectDAO.joinProject(projectId, id);
+        if ()
+    }
 }

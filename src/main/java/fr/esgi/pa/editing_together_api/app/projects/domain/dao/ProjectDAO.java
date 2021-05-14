@@ -8,9 +8,9 @@ public interface ProjectDAO {
 
     Integer createProject(Project project);
 
-    void joinProject(int projectId, int userId);
+    Integer joinProject(int projectId, Long userId);
 
-    List<Project> getUserProjects(int userId);
+    List<Project> getUserProjects(Long userId);
 
     Project getProjectById(int projectId);
 }
