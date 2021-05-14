@@ -16,4 +16,6 @@ public interface ProjectDAO {
     List<Project> getUserProjects(Long userId);
 
     Project getProjectById(int projectId);
+
+    Project getProjectByToken(String projectToken);
 }

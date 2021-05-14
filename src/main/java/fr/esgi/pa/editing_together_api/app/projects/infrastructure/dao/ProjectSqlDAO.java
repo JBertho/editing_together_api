@@ -57,4 +57,13 @@ public class ProjectSqlDAO implements ProjectDAO {
         }
         return ProjectAdapter.adaptToDomain(optionalProject.get());
     }
+
+    @Override
+    public Project getProjectByToken(String projectToken) {
+        Optional<ProjectEntity> optionalProject = projectRepository.findByToken(projectToken);
+        if (optionalProject.isEmpty()) {
+            return null;
+        }
+        return ProjectAdapter.adaptToDomain(optionalProject.get());
+    }
 }

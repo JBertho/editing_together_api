@@ -55,14 +55,14 @@ public class ProjectsController {
         return  ResponseEntity.ok(getOneProjectById.execute(projectId));
     }
 
-    @PostMapping("/join/{projectId}")
+    @PostMapping("/join/{projectToken}")
     public ResponseEntity<?> joinProject(
-            @PathVariable int projectId
+            @PathVariable String projectToken
     ) throws ProjectNotFoundException, UserPrincipalNotFoundException, AlreadyCreatedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());
-        joinProject.execute(projectId, currentUser.getId());
+        Integer projectId = joinProject.execute(projectToken, currentUser.getId());
         return ResponseEntity.created(URI.create("http://localhost:8080/project/" + projectId)).build();
     }
 }
