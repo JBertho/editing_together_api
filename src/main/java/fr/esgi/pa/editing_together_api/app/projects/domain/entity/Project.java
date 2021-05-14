@@ -21,7 +21,7 @@ public class Project {
 
     private Date createdDate;
 
-    private Integer createUserId;
+    private Long createUserId;
 
     private Date lastCompilation;
 
