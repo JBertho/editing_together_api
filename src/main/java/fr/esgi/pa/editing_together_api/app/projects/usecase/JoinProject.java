@@ -6,6 +6,8 @@ import fr.esgi.pa.editing_together_api.app.auth.domain.exceptions.AlreadyCreated
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.ProjectDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
 import fr.esgi.pa.editing_together_api.app.projects.domain.exceptions.ProjectNotFoundException;
+import fr.esgi.pa.editing_together_api.config.exceptions.http.ConflictException;
+import fr.esgi.pa.editing_together_api.config.exceptions.http.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,18 @@ public class JoinProject {
     private final ProjectDAO projectDAO;
     private final UserDAO userDAO;
 
-    public Integer execute(String projectToken, Long userId) throws ProjectNotFoundException, UserPrincipalNotFoundException, AlreadyCreatedException {
+    public Integer execute(String projectToken, Long userId) {
         Project project = projectDAO.getProjectByToken(projectToken);
         if (project == null) {
-            throw new ProjectNotFoundException("Project not found");
+            throw new NotFoundException("Project not found");
         }
 
         User user = userDAO.getUserById(userId);
         if(user == null) {
-            throw new UserPrincipalNotFoundException("");
+            throw new NotFoundException("user not found");
         }
         if (projectDAO.findIfProjectUserExist(project, user)) {
-            throw new AlreadyCreatedException("User already in group");
+            throw new ConflictException("User already in group");
         }
         projectDAO.joinProject(project, user);
 
