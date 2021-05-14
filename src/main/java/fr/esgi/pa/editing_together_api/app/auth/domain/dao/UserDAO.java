@@ -1,5 +1,6 @@
 package fr.esgi.pa.editing_together_api.app.auth.domain.dao;
 
+import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.Role;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.UserEntity;
 
@@ -14,4 +15,6 @@ public interface UserDAO {
     boolean existsByEmail(String email);
 
     Optional<UserEntity> findByUsername(String userName);
+
+    User getUserById(Long userId);
 }

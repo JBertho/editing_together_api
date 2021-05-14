@@ -1,6 +1,7 @@
 package fr.esgi.pa.editing_together_api.app.projects.infrastructure.controller;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
+import fr.esgi.pa.editing_together_api.app.auth.domain.exceptions.AlreadyCreatedException;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
 import fr.esgi.pa.editing_together_api.app.projects.domain.exceptions.ProjectNotCreatedException;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 @RestController
 @RequestMapping("/project")
@@ -56,7 +58,7 @@ public class ProjectsController {
     @PostMapping("/join/{projectId}")
     public ResponseEntity<?> joinProject(
             @PathVariable int projectId
-    ) {
+    ) throws ProjectNotFoundException, UserPrincipalNotFoundException, AlreadyCreatedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());

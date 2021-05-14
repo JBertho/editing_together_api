@@ -1,6 +1,8 @@
 package fr.esgi.pa.editing_together_api.app.auth.infrastructure.dao;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.dao.UserDAO;
+import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
+import fr.esgi.pa.editing_together_api.app.auth.infrastructure.UserAdapter;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.Role;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.models.UserEntity;
 import fr.esgi.pa.editing_together_api.app.auth.infrastructure.repositories.UserRepository;
@@ -34,5 +36,15 @@ public class UserSqlDAO implements UserDAO {
     @Override
     public Optional<UserEntity> findByUsername(String userName) {
         return userRepository.findByUsername(userName);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return null;
+        }
+        return UserAdapter.adapt(optionalUser.get());
+
     }
 }
