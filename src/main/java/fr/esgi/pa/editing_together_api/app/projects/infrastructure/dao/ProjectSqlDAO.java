@@ -12,8 +12,10 @@ import fr.esgi.pa.editing_together_api.app.projects.infrastructure.repositories.
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -46,7 +48,12 @@ public class ProjectSqlDAO implements ProjectDAO {
 
     @Override
     public List<Project> getUserProjects(Long userId) {
-        return null;
+        List<ProjectUserEntity> allByUserId = projectUserRepository.findAllByUserId(userId);
+        if (allByUserId.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<ProjectEntity> projectEntities = projectRepository.findAllById(allByUserId.stream().map(ProjectUserEntity::getProjectId).collect(Collectors.toList()));
+        return projectEntities.stream().map(ProjectAdapter::adaptToDomain).collect(Collectors.toList());
     }
 
     @Override
