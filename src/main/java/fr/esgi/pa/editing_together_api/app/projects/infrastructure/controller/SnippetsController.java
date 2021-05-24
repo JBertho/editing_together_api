@@ -3,8 +3,10 @@ package fr.esgi.pa.editing_together_api.app.projects.infrastructure.controller;
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewSnippetDTO;
+import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.UpdateSnippetDTO;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.CreateSnippet;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippet;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippet;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class SnippetsController {
     private final GetUserInformations getUserInformations;
     private final CreateSnippet createSnippet;
     private final DeleteSnippet deleteSnippet;
+    private final UpdateSnippet updateSnippet;
 
 
     @PostMapping("")
@@ -50,5 +53,17 @@ public class SnippetsController {
 
         deleteSnippet.execute(id, currentUser);
         return noContent().build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity<?> updateSnippet(
+            @RequestBody final UpdateSnippetDTO snippet
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        User currentUser = getUserInformations.execute(principal.getUsername());
+
+        updateSnippet.execute(snippet, currentUser);
+        return ResponseEntity.ok().build();
     }
 }

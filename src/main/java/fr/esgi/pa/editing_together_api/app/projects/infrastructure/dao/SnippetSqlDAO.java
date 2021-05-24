@@ -44,7 +44,8 @@ public class SnippetSqlDAO implements SnippetDAO {
     }
 
     @Override
-    public Snippet updateSnippet(Snippet snippet) {
-        return null;
+    public void saveSnippet(Snippet snippet) {
+        SnippetEntity snippetEntity = SnippetAdapter.adaptToEntity(snippet);
+        snippetRepository.save(snippetEntity);
     }
 }

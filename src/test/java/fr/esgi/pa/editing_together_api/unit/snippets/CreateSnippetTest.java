@@ -4,9 +4,11 @@ import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.ProjectDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.SnippetDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
+import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewSnippetDTO;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.CreateSnippet;
 
+import fr.esgi.pa.editing_together_api.config.exceptions.http.ForbiddenException;
 import fr.esgi.pa.editing_together_api.config.exceptions.http.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,7 @@ public class CreateSnippetTest {
     public void should_return_created_snippet() {
         Mockito.when(mockSnippetDAO.createSnippet(Mockito.any())).thenReturn(15);
         Mockito.when(mockProjectDAO.getProjectById(12)).thenReturn(new Project());
+        Mockito.when(mockProjectDAO.findIfProjectUserExist(Mockito.any(), Mockito.any())).thenReturn(true);
         Integer createdSnippetId = createSnippet.execute(sut, user);
         Mockito.verify(mockSnippetDAO, Mockito.times(1)).createSnippet(Mockito.any());
         assertNotNull(createdSnippetId);
@@ -59,5 +62,12 @@ public class CreateSnippetTest {
         assertThrows(NotFoundException.class, () -> createSnippet.execute(sut, user));
         Mockito.verify(mockProjectDAO, Mockito.times(1)).getProjectById(12);
 
+    }
+
+    @Test
+    public void should_not_create_if_user_not_linked_to_snippet_project() {
+        Mockito.when(mockProjectDAO.getProjectById(12)).thenReturn(new Project());
+        Mockito.when(mockProjectDAO.findIfProjectUserExist(Mockito.any(), Mockito.any())).thenReturn(false);
+        assertThrows(ForbiddenException.class, () -> createSnippet.execute(sut, user));
     }
 }

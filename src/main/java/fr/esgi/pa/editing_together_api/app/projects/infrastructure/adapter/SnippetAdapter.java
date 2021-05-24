@@ -22,6 +22,7 @@ public class SnippetAdapter {
 
     public static Snippet adaptToDomain(SnippetEntity snippetEntity) {
         return Snippet.builder()
+                .id(snippetEntity.getId())
                 .name(snippetEntity.getName())
                 .content(snippetEntity.getContent())
                 .projectId(snippetEntity.getProjectId())
@@ -34,6 +35,7 @@ public class SnippetAdapter {
 
     public static SnippetEntity adaptToEntity(Snippet snippet) {
         return SnippetEntity.builder()
+                .id(snippet.getId())
                 .name(snippet.getName())
                 .content(snippet.getContent())
                 .projectId(snippet.getProjectId())

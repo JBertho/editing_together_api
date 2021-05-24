@@ -7,6 +7,7 @@ import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.adapter.SnippetAdapter;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewSnippetDTO;
+import fr.esgi.pa.editing_together_api.config.exceptions.http.ForbiddenException;
 import fr.esgi.pa.editing_together_api.config.exceptions.http.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ public class CreateSnippet {
         Project project = projectDAO.getProjectById(newSnippetDAO.getProjectId());
         if (Objects.isNull(project)) {
             throw new NotFoundException("Project not found");
+        }
+        System.out.println("WESH");
+        boolean isUserLinkToProject = projectDAO.findIfProjectUserExist(project, currentUser);
+        if (!isUserLinkToProject) {
+            throw new ForbiddenException("User is not link to projet");
         }
         Snippet newSnippet = SnippetAdapter.adaptNewSnippet(newSnippetDAO, currentUser.getId());
 

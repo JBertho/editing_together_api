@@ -14,6 +14,6 @@ public interface SnippetDAO {
 
     void deleteSnippet(int snippetId);
 
-    Snippet updateSnippet(Snippet snippet);
+    void saveSnippet(Snippet snippet);
 
 }
