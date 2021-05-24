@@ -1,4 +1,4 @@
-package fr.esgi.pa.editing_together_api.app.projects.usecase;
+package fr.esgi.pa.editing_together_api.app.projects.usecase.project;
 
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.ProjectDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;

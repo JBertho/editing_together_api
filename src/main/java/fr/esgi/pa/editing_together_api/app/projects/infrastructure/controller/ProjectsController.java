@@ -1,16 +1,15 @@
 package fr.esgi.pa.editing_together_api.app.projects.infrastructure.controller;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
-import fr.esgi.pa.editing_together_api.app.auth.domain.exceptions.AlreadyCreatedException;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
 import fr.esgi.pa.editing_together_api.app.projects.domain.exceptions.ProjectNotCreatedException;
 import fr.esgi.pa.editing_together_api.app.projects.domain.exceptions.ProjectNotFoundException;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewProjectDTO;
-import fr.esgi.pa.editing_together_api.app.projects.usecase.CreateProject;
-import fr.esgi.pa.editing_together_api.app.projects.usecase.GetOneProjectById;
-import fr.esgi.pa.editing_together_api.app.projects.usecase.GetUserProjects;
-import fr.esgi.pa.editing_together_api.app.projects.usecase.JoinProject;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.project.CreateProject;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.project.GetOneProjectById;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.project.GetUserProjects;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.project.JoinProject;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 @RestController
