@@ -2,10 +2,12 @@ package fr.esgi.pa.editing_together_api.app.projects.infrastructure.controller;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
+import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewSnippetDTO;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.UpdateSnippetDTO;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.CreateSnippet;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippet;
+import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.GetSnippetsByProjectId;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippet;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.http.ResponseEntity.noContent;
 
@@ -28,6 +31,7 @@ public class SnippetsController {
     private final CreateSnippet createSnippet;
     private final DeleteSnippet deleteSnippet;
     private final UpdateSnippet updateSnippet;
+    private final GetSnippetsByProjectId getSnippetsByProjectId;
 
 
     @PostMapping("")
@@ -65,5 +69,14 @@ public class SnippetsController {
 
         updateSnippet.execute(snippet, currentUser);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<Snippet>> getAllSnipetByProjectId(
+            @PathVariable("id") Integer projectId
+    ) {
+        List<Snippet> snippets = getSnippetsByProjectId.execute(projectId);
+
+        return ResponseEntity.ok(snippets);
     }
 }

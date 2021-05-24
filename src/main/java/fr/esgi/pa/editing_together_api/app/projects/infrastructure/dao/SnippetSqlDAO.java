@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +27,9 @@ public class SnippetSqlDAO implements SnippetDAO {
 
     @Override
     public List<Snippet> getSnippetsByProjectId(int projectId) {
-        return null;
+        List<SnippetEntity> snippetEntities = snippetRepository.findAllByProjectId(projectId);
+
+        return snippetEntities.stream().map(SnippetAdapter::adaptToDomain).collect(Collectors.toList());
     }
 
     @Override
