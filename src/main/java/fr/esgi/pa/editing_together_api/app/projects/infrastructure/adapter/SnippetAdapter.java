@@ -7,13 +7,13 @@ import java.util.Date;
 
 public class SnippetAdapter {
 
-    public static Snippet adaptNewSnippet(NewSnippetDTO newSnippetDTO) {
+    public static Snippet adaptNewSnippet(NewSnippetDTO newSnippetDTO, Long createUserId) {
         return Snippet.builder()
                 .name(newSnippetDTO.getName())
                 .content(newSnippetDTO.getContent())
                 .projectId(newSnippetDTO.getProjectId())
                 .createdDate(new Date())
-                .createUserId(null)
+                .createUserId(createUserId)
                 .updateDate(null)
                 .updateUserId(null)
                 .build();

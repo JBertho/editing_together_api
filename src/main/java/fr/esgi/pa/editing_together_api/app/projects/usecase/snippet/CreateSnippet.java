@@ -1,5 +1,6 @@
 package fr.esgi.pa.editing_together_api.app.projects.usecase.snippet;
 
+import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.ProjectDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.SnippetDAO;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
@@ -19,12 +20,12 @@ public class CreateSnippet {
     private final SnippetDAO snippetDAO;
     private final ProjectDAO projectDAO;
 
-    public Integer execute(NewSnippetDTO newSnippetDAO) {
+    public Integer execute(NewSnippetDTO newSnippetDAO, User currentUser) {
         Project project = projectDAO.getProjectById(newSnippetDAO.getProjectId());
         if (Objects.isNull(project)) {
             throw new NotFoundException("Project not found");
         }
-        Snippet newSnippet = SnippetAdapter.adaptNewSnippet(newSnippetDAO);
+        Snippet newSnippet = SnippetAdapter.adaptNewSnippet(newSnippetDAO, currentUser.getId());
 
         return snippetDAO.createSnippet(newSnippet);
     }
