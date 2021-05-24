@@ -31,4 +31,16 @@ public class SnippetAdapter {
                 .updateUserId(snippetEntity.getUpdateUserId())
                 .build();
     }
+
+    public static SnippetEntity adaptToEntity(Snippet snippet) {
+        return SnippetEntity.builder()
+                .name(snippet.getName())
+                .content(snippet.getContent())
+                .projectId(snippet.getProjectId())
+                .createdDate(snippet.getCreatedDate())
+                .createUserId(snippet.getCreateUserId())
+                .updateDate(snippet.getUpdateDate())
+                .updateUserId(snippet.getUpdateUserId())
+                .build();
+    }
 }

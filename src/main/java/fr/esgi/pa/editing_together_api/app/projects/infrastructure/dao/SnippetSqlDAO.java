@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -20,7 +19,9 @@ public class SnippetSqlDAO implements SnippetDAO {
 
     @Override
     public Integer createSnippet(Snippet snippet) {
-        return null;
+        SnippetEntity snippetEntity = SnippetAdapter.adaptToEntity(snippet);
+        SnippetEntity savedSnippet = snippetRepository.save(snippetEntity);
+        return savedSnippet.getId();
     }
 
     @Override
