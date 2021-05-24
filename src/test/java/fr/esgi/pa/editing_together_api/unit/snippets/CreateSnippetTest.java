@@ -1,4 +1,4 @@
-package fr.esgi.pa.editing_together_api;
+package fr.esgi.pa.editing_together_api.unit.snippets;
 
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.projects.domain.dao.ProjectDAO;
