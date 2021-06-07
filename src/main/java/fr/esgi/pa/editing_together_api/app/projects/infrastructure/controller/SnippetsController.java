@@ -10,6 +10,7 @@ import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippe
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.GetSnippetsByProjectId;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippet;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,7 +45,9 @@ public class SnippetsController {
         User currentUser = getUserInformations.execute(principal.getUsername());
 
         Integer projectId = createSnippet.execute(snippet, currentUser);
-        return ResponseEntity.created(URI.create("http://localhost:8080/snippets/" + projectId)).build();
+        return ResponseEntity.created(URI.create("http://localhost:8080/snippets/" + projectId))
+                .header("Access-Control-Expose-Headers", "Location")
+                .build();
     }
 
     @DeleteMapping("/{id}")

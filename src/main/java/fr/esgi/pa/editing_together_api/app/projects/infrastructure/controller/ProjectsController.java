@@ -11,6 +11,7 @@ import fr.esgi.pa.editing_together_api.app.projects.usecase.project.GetOneProjec
 import fr.esgi.pa.editing_together_api.app.projects.usecase.project.GetUserProjects;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.project.JoinProject;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,7 +47,9 @@ public class ProjectsController {
         if (projectId == null ) {
             throw new ProjectNotCreatedException("Project could not be created");
         }
-        return ResponseEntity.created(URI.create("http://localhost:8080/projects/" + projectId)).build();
+        return ResponseEntity.created(URI.create("http://localhost:8080/projects/" + projectId))
+                .header("Access-Control-Expose-Headers", "Location")
+                .build();
     }
 
     @GetMapping("/{projectId}")
