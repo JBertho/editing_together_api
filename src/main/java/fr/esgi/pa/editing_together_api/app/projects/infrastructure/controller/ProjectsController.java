@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/api/projects")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class ProjectsController {

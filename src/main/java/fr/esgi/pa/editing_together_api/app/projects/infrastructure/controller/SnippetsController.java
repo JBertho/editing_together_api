@@ -23,7 +23,7 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.noContent;
 
 @RestController
-@RequestMapping("/snippets")
+@RequestMapping("/api/snippets")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class SnippetsController {
