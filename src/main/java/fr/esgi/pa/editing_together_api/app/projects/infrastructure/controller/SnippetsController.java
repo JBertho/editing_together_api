@@ -45,7 +45,7 @@ public class SnippetsController {
         User currentUser = getUserInformations.execute(principal.getUsername());
 
         Integer projectId = createSnippet.execute(snippet, currentUser);
-        return ResponseEntity.created(URI.create("http://localhost:8080/api/snippets/" + projectId))
+        return ResponseEntity.created(URI.create("http://localhost:8080/api/snippets/project/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
     }
