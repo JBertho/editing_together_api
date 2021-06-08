@@ -22,7 +22,7 @@ public class SnippetSqlDAO implements SnippetDAO {
     public Integer createSnippet(Snippet snippet) {
         SnippetEntity snippetEntity = SnippetAdapter.adaptToEntity(snippet);
         SnippetEntity savedSnippet = snippetRepository.save(snippetEntity);
-        return savedSnippet.getId();
+        return savedSnippet.getProjectId();
     }
 
     @Override
