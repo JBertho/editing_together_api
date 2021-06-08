@@ -47,4 +47,10 @@ public class UserSqlDAO implements UserDAO {
         return UserAdapter.adapt(optionalUser.get());
 
     }
+
+    @Override
+    public Optional<UserEntity> findByUserId(Long userId) {
+
+        return userRepository.findById(userId);
+    }
 }

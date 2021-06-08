@@ -17,4 +17,6 @@ public interface UserDAO {
     Optional<UserEntity> findByUsername(String userName);
 
     User getUserById(Long userId);
+
+    Optional<UserEntity> findByUserId(Long userId);
 }

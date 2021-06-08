@@ -3,7 +3,9 @@ package fr.esgi.pa.editing_together_api.app.projects.infrastructure.controller;
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
+import fr.esgi.pa.editing_together_api.app.projects.infrastructure.adapter.SnippetInformationAdapter;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.NewSnippetDTO;
+import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.Response.SnippetInformationDTO;
 import fr.esgi.pa.editing_together_api.app.projects.infrastructure.dto.UpdateSnippetDTO;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.CreateSnippet;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippet;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.noContent;
 
@@ -33,6 +36,8 @@ public class SnippetsController {
     private final DeleteSnippet deleteSnippet;
     private final UpdateSnippet updateSnippet;
     private final GetSnippetsByProjectId getSnippetsByProjectId;
+
+    private final SnippetInformationAdapter snippetInformationAdapter;
 
 
     @PostMapping("")
@@ -75,11 +80,11 @@ public class SnippetsController {
     }
 
     @GetMapping("/project/{id}")
-    public ResponseEntity<List<Snippet>> getAllSnipetByProjectId(
+    public ResponseEntity<List<SnippetInformationDTO>> getAllSnipetByProjectId(
             @PathVariable("id") Integer projectId
     ) {
         List<Snippet> snippets = getSnippetsByProjectId.execute(projectId);
-
-        return ResponseEntity.ok(snippets);
+        List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
+        return ResponseEntity.ok(snippetsInformations);
     }
 }
