@@ -67,7 +67,9 @@ public class ProjectsController {
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());
         Integer projectId = joinProject.execute(projectToken, currentUser.getId());
-        return ResponseEntity.created(URI.create("http://localhost:8080/api/projects/" + projectId)).build();
+        return ResponseEntity.created(URI.create("http://localhost:8080/api/projects/" + projectId))
+                .header("Access-Control-Expose-Headers", "Location")
+                .build();
     }
 
     @GetMapping("/me")
