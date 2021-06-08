@@ -21,7 +21,7 @@ public class SnippetInformationAdapter {
 
         String createUserName = null;
         if (source.getCreateUserId() != null) {
-            createUserName =  getUserById.execute(source.getUpdateUserId()).getUsername();
+            createUserName =  getUserById.execute(source.getCreateUserId()).getUsername();
         }
 
 
