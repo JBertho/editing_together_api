@@ -1,15 +1,12 @@
 package fr.esgi.pa.editing_together_api.app.analyser.usecase;
 
 import fr.esgi.pa.editing_together_api.app.analyser.infrastructure.Redundancy;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CalculateRedundancy {
-    private String code;
 
-    public CalculateRedundancy(String code) {
-        this.code = code;
-    }
-
-    public String get () {
+    public String get (String code) {
         return Redundancy.calculateRedundancy(code);
     }
 }
