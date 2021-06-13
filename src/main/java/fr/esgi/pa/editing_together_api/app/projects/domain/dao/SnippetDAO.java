@@ -16,4 +16,5 @@ public interface SnippetDAO {
 
     void saveSnippet(Snippet snippet);
 
+    List<Snippet> getSnippetsByIds(List<Integer> snippetIds);
 }

@@ -3,6 +3,9 @@ package fr.esgi.pa.editing_together_api.app.compiler.usecase;
 import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.DockerResponseStrategy.DockerErrorBuffer;
 import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.DockerResponseStrategy.DockerInputBuffer;
 import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.controller.CompilerController;
+import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.utils.CompilerUtils;
+import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
+import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 import fr.esgi.pa.editing_together_api.app.utils.FilesUtils;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -18,9 +22,10 @@ public class CompilerService {
 
     private final FilesUtils filesUtils;
 
-    public String compileForC(DockerCompilation dockerCompilation, String sourceCode) throws IOException, InterruptedException {
+    public String compileForC(DockerCompilation dockerCompilation, List<Snippet> snippetsCode, Project project) throws IOException, InterruptedException {
 
         String output;
+        String sourceCode = CompilerUtils.getCodeFromSnippets(snippetsCode);
 
         filesUtils.saveUploadedFiles(sourceCode,  "utility_c/main.c");
 
