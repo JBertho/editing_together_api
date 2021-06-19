@@ -54,7 +54,7 @@ public class ProjectsController {
     @GetMapping("/{projectId}")
     public ResponseEntity<Project> getProjectById(
             @PathVariable int projectId
-    ) throws ProjectNotFoundException {
+    ) {
         return  ResponseEntity.ok(getOneProjectById.execute(projectId));
     }
 
