@@ -13,11 +13,7 @@ public class FilesUtils {
     public static void saveUploadedFiles(String sourceCode,String directoryName, String fileName) throws IOException {
         if (sourceCode.isEmpty())
             return;
-        boolean folderCreated = true;
-        File folder = new File(directoryName);
-        if (!folder.exists()) {
-            folderCreated = folder.mkdir();
-        }
+        boolean folderCreated = createFolderIfNotExist(directoryName);
         if (folderCreated) {
             Path filePath = Paths.get(directoryName + '/' + fileName);
             Files.write(filePath, sourceCode.getBytes());
@@ -38,5 +34,15 @@ public class FilesUtils {
         }
         Files.copy(sourcePath, destinationPath);
 
+    }
+
+    public static boolean createFolderIfNotExist(String folderToCreate) {
+        boolean folderCreated = true;
+        File folder = new File(folderToCreate);
+        if (!folder.exists()) {
+            folderCreated = folder.mkdir();
+        }
+
+        return folderCreated;
     }
 }

@@ -6,11 +6,11 @@ import java.io.IOException;
 
 public interface CompilerStrategy {
 
-    public void saveCode(String code, Long userId) throws IOException;
+    void saveCode(String code, Long userId) throws IOException;
 
-    public String setupDocker(DockerCompilation dockerCompilation, String imageName, Long id) throws IOException, InterruptedException;
+    String setupDocker(DockerCompilation dockerCompilation, String imageName, Long id) throws IOException, InterruptedException;
 
-    public String runDocker(DockerCompilation dockerCompilation, String imageName) throws IOException, InterruptedException;
+    String runDocker(DockerCompilation dockerCompilation, String imageName) throws IOException, InterruptedException;
 
     void copyStaticFile(Long userId) throws IOException;
 }

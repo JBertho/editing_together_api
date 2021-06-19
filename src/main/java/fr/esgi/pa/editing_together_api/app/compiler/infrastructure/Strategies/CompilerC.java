@@ -10,22 +10,35 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 
 @AllArgsConstructor
 @Service
 @Slf4j
 public class CompilerC implements CompilerStrategy {
 
+    private static final String COMPILER_DIRECTORY = "user_compiler";
+    private static final String TEMPLATE_C_DIRECTORY = "utility_c";
+    private static final String USER_C_DIRECTORY = "utility_c_";
+    private static final String MAIN_FILE = "main.c";
+    private static final String DOCKERFILE = "Dockerfile";
+    private static final String SCRIPT_FILE = "entrypoint.sh";
+
+
 
     @Override
     public void saveCode(String code, Long userId) throws IOException {
-        FilesUtils.saveUploadedFiles(code,  "utility_c_" + userId, "main.c");
+        boolean isFolderCreated = FilesUtils.createFolderIfNotExist(COMPILER_DIRECTORY);
+        if (!isFolderCreated) {
+            throw new FileSystemException("COULD_NOT_CREATE_DIRECTORY");
+        }
+        FilesUtils.saveUploadedFiles(code,  COMPILER_DIRECTORY + "/" + USER_C_DIRECTORY + userId, MAIN_FILE);
     }
 
     @Override
     public String setupDocker(DockerCompilation dockerCompilation, String imageName, Long id) throws IOException, InterruptedException {
 
-        String[] dockerBuildImageCommand = new String[] {"docker", "image", "build", "utility_c_" + id, "-t", imageName};
+        String[] dockerBuildImageCommand = new String[] {"docker", "image", "build", COMPILER_DIRECTORY + "/" + USER_C_DIRECTORY + id, "-t", imageName};
         dockerCompilation.setCommand(dockerBuildImageCommand);
 
         int status = dockerCompilation.runCommand();
@@ -54,7 +67,7 @@ public class CompilerC implements CompilerStrategy {
 
     @Override
     public void copyStaticFile(Long userId) throws IOException {
-        FilesUtils.copyFileInOtherFolder("utility_c",  "utility_c_" + userId, "Dockerfile");
-        FilesUtils.copyFileInOtherFolder("utility_c",  "utility_c_" + userId, "entrypoint.sh");
+        FilesUtils.copyFileInOtherFolder(TEMPLATE_C_DIRECTORY,  COMPILER_DIRECTORY + "/" + USER_C_DIRECTORY + userId, DOCKERFILE);
+        FilesUtils.copyFileInOtherFolder(TEMPLATE_C_DIRECTORY,  COMPILER_DIRECTORY + "/" + USER_C_DIRECTORY + userId, SCRIPT_FILE);
     }
 }
