@@ -51,4 +51,10 @@ public class SnippetSqlDAO implements SnippetDAO {
         SnippetEntity snippetEntity = SnippetAdapter.adaptToEntity(snippet);
         snippetRepository.save(snippetEntity);
     }
+
+    @Override
+    public List<Snippet> getSnippetsByIds(List<Integer> snippetIds) {
+
+        return snippetRepository.findAllById(snippetIds).stream().map(SnippetAdapter::adaptToDomain).collect(Collectors.toList());
+    }
 }

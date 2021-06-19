@@ -24,3 +24,5 @@ buildNumber.properties
 src/main/resources/application.properties
 
 editing_together_api.iml
+
+user_compiler/
