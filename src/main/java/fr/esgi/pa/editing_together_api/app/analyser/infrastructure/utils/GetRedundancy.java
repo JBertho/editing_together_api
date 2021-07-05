@@ -6,27 +6,33 @@ import java.util.Map;
 
 public class GetRedundancy {
 
-    private Map<String, String> linesMap;
+    private Map<CodeInterval, String> linesMap;
 
-    public GetRedundancy(Map<String, String> linesMap) {
+    public GetRedundancy(Map<CodeInterval, String> linesMap) {
         this.linesMap = linesMap;
     }
 
-    public List<String> getAll () {
-        List<String> result = new ArrayList<>();
+    private List<CodeIntervalRedundancy> createList () {
+        List<CodeIntervalRedundancy> result = new ArrayList<>();
 
         if (linesMap.isEmpty()){
             return result;
         }
-        for (String sinit : linesMap.keySet()) {
-            for (String send : linesMap.keySet()) {
-                if (sinit != send){
-                    if (linesMap.get(sinit).equals(linesMap.get(send))) {
-                        result.add(sinit.concat(" and ").concat(send));
+        for (CodeInterval sinit : linesMap.keySet()) {
+            for (CodeInterval send : linesMap.keySet()) {
+                if (sinit != send) {
+                    if (linesMap.get(sinit).equals(linesMap.get(send)) && send.getBegin().isAfter(sinit.getBegin())){
+                        CodeIntervalRedundancy cir = new CodeIntervalRedundancy(sinit, send);
+                        result.add(cir);
                     }
                 }
             }
         }
         return result;
+    }
+
+    public List<CodeIntervalRedundancy> getAll () {
+        List<CodeIntervalRedundancy> codesIntervalRedundancy = this.createList();
+        return codesIntervalRedundancy;
     }
 }
