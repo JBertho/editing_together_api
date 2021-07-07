@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/compiler")
+@RequestMapping("/api/compiler")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class CompilerController {
