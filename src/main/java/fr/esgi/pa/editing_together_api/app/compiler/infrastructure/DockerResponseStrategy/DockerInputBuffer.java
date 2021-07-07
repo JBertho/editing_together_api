@@ -13,6 +13,6 @@ public class DockerInputBuffer implements DockerBuffer {
         Process process = processBuilder.start();
         InputStream inputStream = process.getInputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        return bufferedReader.lines().collect(Collectors.joining());
+        return bufferedReader.lines().collect(Collectors.joining("\n"));
     }
 }

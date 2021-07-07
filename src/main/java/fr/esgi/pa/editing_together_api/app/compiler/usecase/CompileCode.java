@@ -20,7 +20,7 @@ import java.util.List;
 public class CompileCode {
 
 
-    public String compileForC(DockerCompilation dockerCompilation, List<Snippet> snippetsCode, Project project, User currentUser) throws IOException, InterruptedException {
+    public String execute(DockerCompilation dockerCompilation, List<Snippet> snippetsCode, Project project, User currentUser) throws IOException, InterruptedException {
 
         CompilerStrategy compiler = CompilerFactory.get(project);
 
