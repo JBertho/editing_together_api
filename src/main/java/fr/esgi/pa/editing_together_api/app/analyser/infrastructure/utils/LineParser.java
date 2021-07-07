@@ -1,18 +1,32 @@
 package fr.esgi.pa.editing_together_api.app.analyser.infrastructure.utils;
 
-import java.util.Arrays;
+import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class LineParser {
-    private String initString;
+    private List<Snippet> snippets;
 
-    public LineParser (String initString) {
-        this.initString = initString;
+    public LineParser (List<Snippet> snippets) {
+        this.snippets = snippets;
     }
 
-    public List<String> convert() {
-        final String END_OF_LINE = "\n";
-        String [] arrayOfString = initString.split(END_OF_LINE);
-        return Arrays.asList(arrayOfString);
+    public List<Line> convert(String delimiter) {
+        List<Line> result = new ArrayList<>();
+        int count = 1;
+        for (Snippet snippet: snippets){
+            String [] arrayOfString = snippet.getContent().split(delimiter);
+            for (int i = 0; i<arrayOfString.length; i++){
+                String s = arrayOfString[i];
+                s=s.trim();
+                if (!s.isEmpty()) {
+                    Line line = new Line(s, snippet.getId(), i+1, count);
+                    result.add(line);
+                }
+            }
+            count ++;
+        }
+        return result;
     }
 }
