@@ -53,7 +53,9 @@ public class ProjectSqlDAO implements ProjectDAO {
             return Collections.emptyList();
         }
         List<ProjectEntity> projectEntities = projectRepository.findAllById(allByUserId.stream().map(ProjectUserEntity::getProjectId).collect(Collectors.toList()));
-        return projectEntities.stream().map(ProjectAdapter::adaptToDomain).collect(Collectors.toList());
+        return projectEntities.stream().map(ProjectAdapter::adaptToDomain)
+                .peek(project -> project.setParticipants(projectUserRepository.countAllByProjectId(project.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -62,7 +64,9 @@ public class ProjectSqlDAO implements ProjectDAO {
         if (optionalProject.isEmpty()) {
             return null;
         }
-        return ProjectAdapter.adaptToDomain(optionalProject.get());
+        Project project = ProjectAdapter.adaptToDomain(optionalProject.get());
+        project.setParticipants(projectUserRepository.countAllByProjectId(project.getId()));
+        return project;
     }
 
     @Override
@@ -71,6 +75,8 @@ public class ProjectSqlDAO implements ProjectDAO {
         if (optionalProject.isEmpty()) {
             return null;
         }
-        return ProjectAdapter.adaptToDomain(optionalProject.get());
+        Project project = ProjectAdapter.adaptToDomain(optionalProject.get());
+        project.setParticipants(projectUserRepository.countAllByProjectId(project.getId()));
+        return project;
     }
 }

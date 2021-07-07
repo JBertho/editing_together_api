@@ -26,4 +26,6 @@ public class Project {
     private Date lastCompilation;
 
     private String token;
+
+    private Integer participants;
 }
