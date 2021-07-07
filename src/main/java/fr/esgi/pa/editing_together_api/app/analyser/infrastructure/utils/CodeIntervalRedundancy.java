@@ -36,15 +36,18 @@ public class CodeIntervalRedundancy {
         return Objects.equals(firstRedundancy.getBegin(), that.firstRedundancy.getBegin()) &&
                 Objects.equals(secondRedundancy.getBegin(), that.secondRedundancy.getBegin()) &&
                 Objects.equals(firstRedundancy.getEnd(), that.firstRedundancy.getEnd()) &&
-                Objects.equals(firstRedundancy.getEnd(), that.firstRedundancy.getEnd());
+                Objects.equals(secondRedundancy.getEnd(), that.secondRedundancy.getEnd());
     }
 
     @Override
     public String toString() {
-        return "CodeIntervalRedundancy{" +
-                "between" + firstRedundancy.toString() +
-                " and " + secondRedundancy.toString() +
-                '}';
+        String s = String.format("Duplication between snippet %s line %s - snippet %s line %s and snippet %s line %s - snippet %s line %s",
+                this.firstRedundancy.getBegin().getSnippet_id(), this.firstRedundancy.getBegin().getLine(),
+                this.firstRedundancy.getEnd().getSnippet_id(), this.firstRedundancy.getEnd().getLine(),
+                this.secondRedundancy.getBegin().getSnippet_id(), this.secondRedundancy.getBegin().getLine(),
+                this.secondRedundancy.getEnd().getSnippet_id(), this.secondRedundancy.getEnd().getLine());
+
+        return s;
     }
 }
 

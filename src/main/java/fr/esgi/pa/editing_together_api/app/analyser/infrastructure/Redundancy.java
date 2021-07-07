@@ -7,15 +7,17 @@ import fr.esgi.pa.editing_together_api.app.analyser.infrastructure.utils.Redunda
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class Redundancy {
 
-    public static Set<CodeIntervalRedundancy> calculateRedundancy (List<Snippet> snippets, String delimiter) {
+    public static String calculateRedundancy (List<Snippet> snippets, String delimiter) {
         LineParser lp = new LineParser(snippets);
         Redundancy_map redundancy_map = new Redundancy_map (lp.convert(delimiter));
         GetRedundancy getRedundancy = new GetRedundancy(redundancy_map.create_map());
         Set<CodeIntervalRedundancy> redundancies = getRedundancy.getAll();
-        return redundancies;
+        Optional<CodeIntervalRedundancy> first = redundancies.stream().findFirst();
+        return first.isPresent() ? first.get().toString() : "No duplication";
     }
 }

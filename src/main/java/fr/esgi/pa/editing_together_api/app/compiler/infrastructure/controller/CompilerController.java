@@ -57,7 +57,7 @@ public class CompilerController {
         CompilationResponse compilationResponse = new CompilationResponse();
 
         try {
-            compilationResponse.setRedundancy(calculateRedundancy.get(snippets,"\n").toString());
+            compilationResponse.setRedundancy(calculateRedundancy.get(snippets,"\n"));
             compilationResponse.setResponse(compilerService.execute(dockerCompilation, snippets, project, currentUser));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
