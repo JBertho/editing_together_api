@@ -1,5 +1,6 @@
 package fr.esgi.pa.editing_together_api.app.compiler.infrastructure.controller;
 
+import fr.esgi.pa.editing_together_api.app.analyser.usecase.CalculateRedundancy;
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.dto.Request.CompileContent;
@@ -31,6 +32,7 @@ public class CompilerController {
     private final GetSnippets getSnippets;
     private final GetOneProjectById getOneProjectById;
     private final GetUserInformations getUserInformations;
+    private final CalculateRedundancy calculateRedundancy;
 
     @PostMapping("c")
     public ResponseEntity<String> compileForC(@RequestBody String code) {
@@ -55,7 +57,7 @@ public class CompilerController {
         CompilationResponse compilationResponse = new CompilationResponse();
 
         try {
-            compilationResponse.setRedundancy("TODO ADD REDUNDANCY");
+            compilationResponse.setRedundancy(calculateRedundancy.get(snippets,"\n"));
             compilationResponse.setResponse(compilerService.compileForC(dockerCompilation, snippets, project, currentUser));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
