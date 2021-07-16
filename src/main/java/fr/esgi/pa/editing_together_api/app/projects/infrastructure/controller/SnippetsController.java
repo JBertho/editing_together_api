@@ -14,6 +14,9 @@ import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippe
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +43,8 @@ public class SnippetsController {
     private final SnippetInformationAdapter snippetInformationAdapter;
 
 
-    @PostMapping("")
+    @MessageMapping("/create/{projectId}")
+    @SendTo("/listener/projects/{projectId}")
     public ResponseEntity<String> createSnippet(
             @RequestBody final NewSnippetDTO snippet
     ) {
@@ -67,16 +71,23 @@ public class SnippetsController {
         return noContent().build();
     }
 
-    @PutMapping("")
-    public ResponseEntity<?> updateSnippet(
+    @MessageMapping("/update/{projectId}")
+    @SendTo("/listener/projects/{projectId}")
+    public List<SnippetInformationDTO> updateSnippet(
+            @DestinationVariable Integer projectId,
             @RequestBody final UpdateSnippetDTO snippet
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        User currentUser = getUserInformations.execute(principal.getUsername());
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserDetails principal = (UserDetails) authentication.getPrincipal();
+//        String username = principal.getUsername();
+        String username = "james";
+        User currentUser = getUserInformations.execute(username);
 
         updateSnippet.execute(snippet, currentUser);
-        return ResponseEntity.ok().build();
+
+        List<Snippet> snippets = getSnippetsByProjectId.execute(snippet.getProjectId());
+        List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
+        return snippetsInformations;
     }
 
     @GetMapping("/project/{id}")
