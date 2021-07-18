@@ -12,11 +12,12 @@ import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippe
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.GetSnippetsByProjectId;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippet;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,10 +42,10 @@ public class SnippetsController {
     private final GetSnippetsByProjectId getSnippetsByProjectId;
 
     private final SnippetInformationAdapter snippetInformationAdapter;
+    SimpMessagingTemplate template;
 
 
-    @MessageMapping("/create/{projectId}")
-    @SendTo("/listener/projects/{projectId}")
+    @PostMapping("")
     public ResponseEntity<String> createSnippet(
             @RequestBody final NewSnippetDTO snippet
     ) {
@@ -54,6 +55,9 @@ public class SnippetsController {
         User currentUser = getUserInformations.execute(principal.getUsername());
 
         Integer projectId = createSnippet.execute(snippet, currentUser);
+
+        wsSendAllSnippets(projectId);
+
         return ResponseEntity.created(URI.create("http://localhost:8080/api/snippets/project/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
@@ -66,28 +70,26 @@ public class SnippetsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());
+        Integer projectId = deleteSnippet.execute(id, currentUser);
+        wsSendAllSnippets(projectId);
 
-        deleteSnippet.execute(id, currentUser);
         return noContent().build();
     }
 
-    @MessageMapping("/update/{projectId}")
-    @SendTo("/listener/projects/{projectId}")
-    public List<SnippetInformationDTO> updateSnippet(
-            @DestinationVariable Integer projectId,
+    @PutMapping("")
+    public ResponseEntity<?> updateSnippet(
             @RequestBody final UpdateSnippetDTO snippet
     ) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserDetails principal = (UserDetails) authentication.getPrincipal();
-//        String username = principal.getUsername();
-        String username = "james";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        String username = principal.getUsername();
         User currentUser = getUserInformations.execute(username);
 
         updateSnippet.execute(snippet, currentUser);
 
-        List<Snippet> snippets = getSnippetsByProjectId.execute(snippet.getProjectId());
-        List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
-        return snippetsInformations;
+        wsSendAllSnippets(snippet.getProjectId());
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/project/{id}")
@@ -98,4 +100,11 @@ public class SnippetsController {
         List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
         return ResponseEntity.ok(snippetsInformations);
     }
+
+    private void wsSendAllSnippets(Integer projectId) {
+        List<Snippet> snippets = getSnippetsByProjectId.execute(projectId);
+        List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
+        template.convertAndSend("/listener/projects/" + projectId, snippetsInformations);
+    }
+
 }

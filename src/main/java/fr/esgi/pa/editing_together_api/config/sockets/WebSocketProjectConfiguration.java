@@ -20,7 +20,8 @@ public class WebSocketProjectConfiguration implements WebSocketMessageBrokerConf
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/snippets")
-                .setAllowedOrigins("http://localhost:4200")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
+
     }
 }
