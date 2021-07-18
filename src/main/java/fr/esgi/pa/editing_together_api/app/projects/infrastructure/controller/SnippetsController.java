@@ -12,8 +12,12 @@ import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.DeleteSnippe
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.GetSnippetsByProjectId;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.UpdateSnippet;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +42,7 @@ public class SnippetsController {
     private final GetSnippetsByProjectId getSnippetsByProjectId;
 
     private final SnippetInformationAdapter snippetInformationAdapter;
+    SimpMessagingTemplate template;
 
 
     @PostMapping("")
@@ -50,6 +55,9 @@ public class SnippetsController {
         User currentUser = getUserInformations.execute(principal.getUsername());
 
         Integer projectId = createSnippet.execute(snippet, currentUser);
+
+        wsSendAllSnippets(projectId);
+
         return ResponseEntity.created(URI.create("http://localhost:8080/api/snippets/project/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
@@ -62,8 +70,9 @@ public class SnippetsController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());
+        Integer projectId = deleteSnippet.execute(id, currentUser);
+        wsSendAllSnippets(projectId);
 
-        deleteSnippet.execute(id, currentUser);
         return noContent().build();
     }
 
@@ -73,9 +82,13 @@ public class SnippetsController {
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails principal = (UserDetails) authentication.getPrincipal();
-        User currentUser = getUserInformations.execute(principal.getUsername());
+        String username = principal.getUsername();
+        User currentUser = getUserInformations.execute(username);
 
         updateSnippet.execute(snippet, currentUser);
+
+        wsSendAllSnippets(snippet.getProjectId());
+
         return ResponseEntity.ok().build();
     }
 
@@ -87,4 +100,11 @@ public class SnippetsController {
         List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
         return ResponseEntity.ok(snippetsInformations);
     }
+
+    private void wsSendAllSnippets(Integer projectId) {
+        List<Snippet> snippets = getSnippetsByProjectId.execute(projectId);
+        List<SnippetInformationDTO> snippetsInformations = snippets.stream().map(snippetInformationAdapter::adapt).collect(Collectors.toList());
+        template.convertAndSend("/listener/projects/" + projectId, snippetsInformations);
+    }
+
 }

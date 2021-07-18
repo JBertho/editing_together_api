@@ -18,7 +18,7 @@ public class DeleteSnippet {
     private final SnippetDAO snippetDAO;
     private final ProjectDAO projectDAO;
 
-    public void execute(int snippetId, User currentUser) {
+    public Integer execute(int snippetId, User currentUser) {
         Snippet snippetToDelete = snippetDAO.getSnippetById(snippetId);
         if (Objects.isNull(snippetToDelete)) {
             throw new NotFoundException("Snippet not found");
@@ -33,6 +33,8 @@ public class DeleteSnippet {
         }
 
         snippetDAO.deleteSnippet(snippetId);
+
+        return project.getId();
 
     }
 
