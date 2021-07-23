@@ -26,7 +26,6 @@ public class CreateSnippet {
         if (Objects.isNull(project)) {
             throw new NotFoundException("Project not found");
         }
-        System.out.println("WESH");
         boolean isUserLinkToProject = projectDAO.findIfProjectUserExist(project, currentUser);
         if (!isUserLinkToProject) {
             throw new ForbiddenException("User is not link to projet");

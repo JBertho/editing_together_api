@@ -16,11 +16,4 @@ class msgObject {
 
 @Controller
 public class TestClass {
-
-//    @MessageMapping("/{id}")
-//    @SendTo("/listener/projects/{id}")
-//    public String chat(@DestinationVariable Integer id, msgObject msg) {
-//        System.out.println("SALUT MEC : " + msg.projectId);
-//        return msg.msg;
-//    }
 }
