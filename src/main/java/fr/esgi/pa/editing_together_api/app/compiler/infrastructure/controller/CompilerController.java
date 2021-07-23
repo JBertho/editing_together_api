@@ -11,6 +11,7 @@ import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Project;
 import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.project.GetOneProjectById;
 import fr.esgi.pa.editing_together_api.app.projects.usecase.snippet.GetSnippets;
+import fr.esgi.pa.editing_together_api.config.exceptions.http.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,6 +54,10 @@ public class CompilerController {
 
         List<Snippet> snippets = getSnippets.execute(compileContent.getSnippetsId());
         Project project = getOneProjectById.execute(compileContent.getProjectId());
+
+        if (snippets.size() == 0) {
+            throw new NotFoundException("Snippets not found");
+        }
 
         CompilationResponse compilationResponse = new CompilationResponse();
 
