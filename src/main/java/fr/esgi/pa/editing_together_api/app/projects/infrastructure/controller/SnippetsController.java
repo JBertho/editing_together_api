@@ -31,7 +31,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 
 @RestController
 @RequestMapping("/api/snippets")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @AllArgsConstructor
 public class SnippetsController {
 

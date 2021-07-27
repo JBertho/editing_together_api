@@ -22,7 +22,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
+
 @AllArgsConstructor
 public class ProjectsController {
 
