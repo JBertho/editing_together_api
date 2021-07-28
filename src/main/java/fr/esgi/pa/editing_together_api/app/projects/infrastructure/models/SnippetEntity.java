@@ -24,7 +24,7 @@ public class SnippetEntity {
     @Column
     private String name;
 
-    @Column
+    @Column(length = 9999)
     private String content;
 
     @Column(name = "project_id")
