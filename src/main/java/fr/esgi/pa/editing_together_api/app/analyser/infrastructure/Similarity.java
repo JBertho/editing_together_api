@@ -17,6 +17,6 @@ public class Similarity {
         GetSimilarity gs = new GetSimilarity(stv.getMapVisitor());
         List<String> ls = gs.getRedundancy();
         Optional<String> first = ls.stream().findFirst();
-        return first.isPresent() ? first.get().toString() : "No similarity";
+        return first.map(String::toString).orElse("No similarity");
     }
 }

@@ -1,6 +1,7 @@
 package fr.esgi.pa.editing_together_api.app.compiler.infrastructure.controller;
 
 import fr.esgi.pa.editing_together_api.app.analyser.usecase.CalculateRedundancy;
+import fr.esgi.pa.editing_together_api.app.analyser.usecase.CalculateSimilarity;
 import fr.esgi.pa.editing_together_api.app.auth.domain.entity.User;
 import fr.esgi.pa.editing_together_api.app.auth.usecase.GetUserInformations;
 import fr.esgi.pa.editing_together_api.app.compiler.infrastructure.dto.Request.CompileContent;
@@ -35,6 +36,7 @@ public class CompilerController {
     private final GetOneProjectById getOneProjectById;
     private final GetUserInformations getUserInformations;
     private final CalculateRedundancy calculateRedundancy;
+    private final CalculateSimilarity calculateSimilarity;
 
     @PostMapping("c")
     public ResponseEntity<String> compileForC(@RequestBody String code) {
@@ -63,7 +65,9 @@ public class CompilerController {
         CompilationResponse compilationResponse = new CompilationResponse();
 
         try {
-            compilationResponse.setRedundancy(calculateRedundancy.get(snippets,"\n"));
+            String analyse = calculateRedundancy.get(snippets,"\n");
+            analyse += "\n" + calculateSimilarity.get(snippets,project.getLanguage());
+            compilationResponse.setRedundancy(analyse);
             compilationResponse.setResponse(compilerService.execute(dockerCompilation, snippets, project, currentUser));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
