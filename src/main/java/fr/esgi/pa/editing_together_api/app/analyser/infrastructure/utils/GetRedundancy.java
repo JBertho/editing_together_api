@@ -1,6 +1,7 @@
 package fr.esgi.pa.editing_together_api.app.analyser.infrastructure.utils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GetRedundancy {
 
@@ -29,18 +30,20 @@ public class GetRedundancy {
         return result;
     }
 
-    public Set<CodeIntervalRedundancy> getAll () {
-        Set<CodeIntervalRedundancy> result = this.createList();
+    public List<CodeIntervalRedundancy> getAll () {
+        List<CodeIntervalRedundancy> result = new ArrayList<>(this.createList());
         if (result.isEmpty()){
-            return result;
+            return Collections.emptyList();
         }
         boolean hasChange = true;
-        while (hasChange == true) {
+        while (hasChange) {
             hasChange = false;
             Set<CodeIntervalRedundancy> add = new HashSet<>();
             Set<CodeIntervalRedundancy> supp = new HashSet<>();
-            for (CodeIntervalRedundancy cir1 : result) {
-                for (CodeIntervalRedundancy cir2 : result) {
+            for (int i = 0; i < result.size(); i++) {
+                CodeIntervalRedundancy cir1 = result.get(i);
+                for (int j = i + 1; j < result.size(); j++) {
+                    CodeIntervalRedundancy cir2 = result.get(i);
                     if (cir2.getFirstRedundancy().getBegin().isBetween(cir1.getFirstRedundancy().getBegin(),cir1.getFirstRedundancy().getEnd())) {
                         hasChange = true;
                         CodeInterval newFirst = new CodeInterval(cir1.getFirstRedundancy().getBegin(), cir2.getFirstRedundancy().getEnd());
@@ -54,12 +57,6 @@ public class GetRedundancy {
             }
             result.removeAll(supp);
             result.addAll(add);
-            System.out.println("nouvelle etape");
-            for (CodeIntervalRedundancy cir : result) {
-                System.out.println(cir.getFirstRedundancy());
-                System.out.println(cir.getSecondRedundancy());
-            }
-            System.out.println("");
         }
         return result;
     }

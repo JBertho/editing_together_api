@@ -8,7 +8,6 @@ import fr.esgi.pa.editing_together_api.app.projects.domain.entity.Snippet;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class Redundancy {
 
@@ -16,7 +15,7 @@ public class Redundancy {
         LineParser lp = new LineParser(snippets);
         Redundancy_map redundancy_map = new Redundancy_map (lp.convert(delimiter));
         GetRedundancy getRedundancy = new GetRedundancy(redundancy_map.create_map());
-        Set<CodeIntervalRedundancy> redundancies = getRedundancy.getAll();
+        List<CodeIntervalRedundancy> redundancies = getRedundancy.getAll();
         Optional<CodeIntervalRedundancy> first = redundancies.stream().findFirst();
         return first.isPresent() ? first.get().toString() : "No duplication";
     }
