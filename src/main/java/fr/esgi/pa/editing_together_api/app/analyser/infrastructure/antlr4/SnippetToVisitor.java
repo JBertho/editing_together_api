@@ -40,15 +40,12 @@ public class SnippetToVisitor {
         if (language == LanguageType.JAVA) {
             String s = "public class Toto{".concat(snippet.getContent()).concat("}");
             CharStream cs = CharStreams.fromString(s);
-            System.out.println(s);
             antlr4.Java8Lexer lexer = new antlr4.Java8Lexer (cs);
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
             antlr4.Java8Parser java8Parser = new antlr4.Java8Parser (commonTokenStream);
             Java8Parser.CompilationUnitContext tree = java8Parser.compilationUnit();
-            System.out.println(tree.toStringTree());
             Java8VisitorNormalizer java8vn = new Java8VisitorNormalizer(java8Parser);
             java8vn.visit(tree);
-            System.out.println(java8vn.sb.toString());
             result = java8vn.sb.toString();
         }
         else {
