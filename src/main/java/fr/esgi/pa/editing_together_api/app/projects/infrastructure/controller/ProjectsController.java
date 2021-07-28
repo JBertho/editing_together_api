@@ -47,7 +47,7 @@ public class ProjectsController {
         if (projectId == null ) {
             throw new ProjectNotCreatedException("Project could not be created");
         }
-        return ResponseEntity.created(URI.create("http://localhost:8080/api/projects/" + projectId))
+        return ResponseEntity.created(URI.create("http://20.199.104.235:8080/api/projects/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
     }
@@ -67,7 +67,7 @@ public class ProjectsController {
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         User currentUser = getUserInformations.execute(principal.getUsername());
         Integer projectId = joinProject.execute(projectToken, currentUser.getId());
-        return ResponseEntity.created(URI.create("http://localhost:8080/api/projects/" + projectId))
+        return ResponseEntity.created(URI.create("http://20.199.104.235:8080/api/projects/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
     }
