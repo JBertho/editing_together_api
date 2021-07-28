@@ -58,7 +58,7 @@ public class SnippetsController {
 
         wsSendAllSnippets(projectId);
 
-        return ResponseEntity.created(URI.create("http://localhost:8080/api/snippets/project/" + projectId))
+        return ResponseEntity.created(URI.create("http://20.199.104.235:8080/api/snippets/project/" + projectId))
                 .header("Access-Control-Expose-Headers", "Location")
                 .build();
     }
