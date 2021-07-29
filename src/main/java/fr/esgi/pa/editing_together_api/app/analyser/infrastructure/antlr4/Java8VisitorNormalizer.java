@@ -45,9 +45,6 @@ public class Java8VisitorNormalizer<T> extends Java8BaseVisitor<T> {
 
     @Override
     public T visitExpressionName(Java8Parser.ExpressionNameContext ctx) {
-        if (!normalizeVariables.containsKey(ctx.getText())){
-            throw new RuntimeException("Missing definition of variable before using it");
-        }
         String normVariable = normalizeVariables.get(ctx.getText());
         sb.append("(expressionName " + normVariable + ")");
         return null;
