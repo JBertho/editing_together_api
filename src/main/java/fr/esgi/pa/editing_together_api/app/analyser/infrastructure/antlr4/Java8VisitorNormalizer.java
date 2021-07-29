@@ -28,6 +28,13 @@ public class Java8VisitorNormalizer<T> extends Java8BaseVisitor<T> {
     }
 
     @Override
+    public T visitMethodDeclarator (Java8Parser.MethodDeclaratorContext ctx) {
+        String normVariableName = "method";
+        sb.append("(methodDeclarator " + normVariableName + ")");
+        return null;
+    }
+
+    @Override
     public T visitVariableDeclaratorId(Java8Parser.VariableDeclaratorIdContext ctx) {
         String normVariableName = "v" + String.valueOf(nbVariables);
         nbVariables++;
